@@ -1,9 +1,9 @@
-aiogram==2.21.0
+aiogram==3.13.1
 numpy==1.24.3
 pybit==1.2.0
 redis==5.0.0
 requests==2.31.0
 sqlalchemy==2.0.18
 python-telegram-bot==20.3
-asyncio==3.11.4
+asyncio==3.4.3
 matplotlib==3.7.1
