@@ -21,4 +21,3 @@ async def botStart():
     await dp.start_polling(bot)
 
 # Запуск бота asyncio.run(botStart())
-

@@ -25,7 +25,7 @@ from chatbot.handlers.user_private import user_private_router
 bot = Bot(token=os.getenv('TOKEN'))
 dp = Dispatcher()
 
-# Подключение роутера
+# Подключение роутера A
 dp.include_routers(user_private_router)
 
 async def botStart():

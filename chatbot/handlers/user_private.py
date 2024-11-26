@@ -18,7 +18,7 @@ async def menu_cmd(message: types.Message):
         text = "Меню криптовалют",
     )
 
-# Обработчик /help
+# Обработчик /help E
 @user_private_router.message(or_f(Command('help'), (F.text.lower() == "о боте")))
 async def help_cmd(message: types.Message):
     await message.answer(
