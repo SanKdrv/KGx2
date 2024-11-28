@@ -3,7 +3,8 @@ from aiogram.filters import CommandStart, Command, or_f, Filter
 from aiogram.types import CallbackQuery, Message
 import logging
 import chatbot.keyboards as kb
-from chatbot.keyboards import user_subscriptions, db_tokens
+from chatbot.keyboards import user_subscriptions, db_tokens, inline_tokens_kb
+from chatbot.keyboards import Pagination
 
 # Логи-бота
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -28,7 +29,7 @@ async def menu_cmd(message: types.Message):
     # /
     await message.answer(
         text = "Меню криптовалют",
-        reply_markup = await kb.inline_tokens_kb(userId)
+        reply_markup = await kb.inline_tokens_kb()
     )
 
 # Обработчик /help
@@ -53,14 +54,25 @@ async def users_agreement(callback: CallbackQuery):
 
 @user_private_router.callback_query(F.data.startswith('token_subscription:'))
 async def token_subscription(callback: CallbackQuery):
-    userId = callback.from_user.id
-    tokenID = callback.data.split(':')[-1]
-    print(tokenID)
-
+    tokenID = callback.data.split(':')[-2]
+    current_page = int(callback.data.split(':')[-1])
     if tokenID in user_subscriptions:
         user_subscriptions.remove(tokenID)
     else:
         user_subscriptions.append(tokenID)
         user_subscriptions.sort()
 
-    await callback.message.edit_reply_markup(reply_markup=await kb.inline_tokens_kb(userId))
+    await callback.message.edit_reply_markup(reply_markup=await kb.inline_tokens_kb(page=current_page))
+
+# Обработчик нажатия кнопок навигации
+@user_private_router.callback_query(Pagination.filter())
+async def pagination_handler(call: CallbackQuery, callback_data: Pagination):
+    page = callback_data.page  # Получение номера страницы из callback data
+    await call.message.edit_reply_markup(reply_markup=await inline_tokens_kb(page=page))  # Обновление клавиатуры при нажатии кнопок "вперед" или "назад"
+
+@user_private_router.callback_query(F.data.startswith('tokens_unsubscribe'))
+async def token_unsubscription(callback: CallbackQuery):
+    user_subscriptions.clear()
+    current_page = int(callback.data.split(":")[-1])
+
+    await callback.message.edit_reply_markup(reply_markup=await kb.inline_tokens_kb(page=current_page))
