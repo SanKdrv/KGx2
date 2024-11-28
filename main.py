@@ -32,7 +32,7 @@ load_dotenv(find_dotenv())
 
 from chatbot.handlers.user_private import user_private_router
 
-bot = Bot(token=config.TELEGRAM_BOT_TOKEN)
+bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
 
 async def botStart():
