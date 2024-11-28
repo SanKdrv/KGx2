@@ -4,7 +4,7 @@ import asyncio
 from dotenv import find_dotenv, load_dotenv
 from aiogram import Bot, Dispatcher
 import os
-from parse.parse_module import Parse
+from parse import parse_module
 from models.models import *
 from config import Config
 
@@ -18,7 +18,7 @@ users_tokens = UsersTokens('UsersTokens')
 
 # Инициализация модулей
 broker = message_broker_module.MessageBroker()
-parser = Parse(tokens_table=tokens, config=config)
+parser = parse_module.Parse(tokens_table=tokens, config=config)
 
 # Создание потоков
 thread1 = threading.Thread(target=parser.parse_bybit())
