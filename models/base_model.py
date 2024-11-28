@@ -1,11 +1,11 @@
 import sqlalchemy as db
 import typing
-from ..config import Config
+from ..config import *
 
 class BaseModel():
     """Базовый класс для работы с таблицами MySQL."""
-    def __init__(self, table_name: str, config: Config):
-        self.engine = db.create_engine(config.CONNECT_MYSQL_STRING)
+    def __init__(self, table_name: str):
+        self.engine = db.create_engine(CONNECT_MYSQL_STRING)
         self.connection = self.engine.connect()
         self.metaData = db.MetaData()
         self.metaData.reflect(bind = self.engine)

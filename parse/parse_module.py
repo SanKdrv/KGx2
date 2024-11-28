@@ -2,8 +2,8 @@ import pybit.unified_trading
 import redis
 import time
 import threading
-from ..config import Config
-from ..models import Tokens
+from ..config import *
+from ..models.models import Tokens
 
 
 class Parse():
@@ -11,8 +11,7 @@ class Parse():
         Принимает параметрами при инициализации ORM модель
         таблицы токенов и кофигурационный класс.
         Пример данных в redis - {KGx2___BTCUSDT.1732791446430: 95136.7} """
-    def __init__(self, tokens_table: Tokens, config: Config):
-        self.config = config
+    def __init__(self, tokens_table: Tokens):
         self.redis_cli = self.create_redis_connection()
         self.tokens_table = tokens_table
         self.tokens = self.get_tokens()
@@ -44,10 +43,10 @@ class Parse():
         """ Создание клиента Redis
             метод возвращает redis-клиент, записывает результат 
             в поле redis_cli """
-        return redis.Redis(host=self.config.REDIS_CONFIG['HOST'], 
-                            port=self.config.REDIS_CONFIG['PORT'], 
-                            db=self.config.REDIS_CONFIG['DATABASE'],
-                            password=self.config.REDIS_CONFIG['PASSWORD'])
+        return redis.Redis(host=REDIS_CONFIG['HOST'], 
+                            port=REDIS_CONFIG['PORT'], 
+                            db=REDIS_CONFIG['DATABASE'],
+                            password=REDIS_CONFIG['PASSWORD'])
 
     def close_redis_connection(self) -> None:
         """Закрытие соединения с Redis"""

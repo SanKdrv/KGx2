@@ -7,10 +7,8 @@ import config
 import os
 from parse import parse_module
 from models.models import *
-from config import Config
+from config import *
 
-# Инициализация config
-config = Config()
 
 # Инициализация ORM моделей
 users = Users('Users')
@@ -19,7 +17,7 @@ users_tokens = UsersTokens('UsersTokens')
 
 # Инициализация модулей
 broker = message_broker_module.MessageBroker()
-parser = parse_module.Parse(tokens_table=tokens, config=config)
+parser = parse_module.Parse(tokens_table=tokens)
 
 # Создание потоков
 thread1 = threading.Thread(target=parser.parse_bybit())
