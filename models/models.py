@@ -3,6 +3,12 @@ import sqlalchemy as db
 import typing
 
 
+# Создание моделей:
+# users = Users('Users')
+# tokens = Tokens('Tokens')
+# users_tokens = UsersTokens('UsersTokens')
+
+
 class Users(BaseModel):
     """Класс для работы с таблицей пользователей"""
     def __init__(self, table_name: str):
