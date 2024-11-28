@@ -44,6 +44,7 @@ class MessageBroker:
         }}
         return data
 
+    # Можно отказаться, т.к логика будет в модуле чат-бота
     def get_new_subscribtions(self, token_name: str) -> [str]:
         ...
 
