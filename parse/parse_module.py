@@ -2,8 +2,8 @@ import pybit.unified_trading
 import redis
 import time
 import threading
-from ..config import *
-from ..models.models import Tokens
+from config import *
+from models.models import Tokens
 
 
 class Parse():

@@ -1,6 +1,6 @@
 import sqlalchemy as db
 import typing
-from ..config import *
+from config import *
 
 class BaseModel():
     """Базовый класс для работы с таблицами MySQL."""

@@ -31,6 +31,10 @@ help = InlineKeyboardMarkup(
 db_tokens = {'00': 'BTC', '01': 'ETH', '02': 'THE', '03': 'DOGE', '04': 'PEPE'}
 user_subscriptions = ['00', '03', '04']
 
+class Pagination(CallbackData, prefix='pag'):
+    action: str
+    page: int
+
 # Inline-клавиатура команды "Меню"
 async def inline_tokens_kb(page=0):
     # Подтягивание подписок пользователя по TokenID
