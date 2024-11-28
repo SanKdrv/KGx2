@@ -1,14 +1,11 @@
 import os
 from aiogram import Bot, Dispatcher
-from dotenv import find_dotenv, load_dotenv
+from ..config import *
 from chatbot.handlers.user_private import user_private_router
 
 
 def start_bot():
-    # Подключение .env
-    load_dotenv(find_dotenv())
-
-    bot = Bot(token=os.getenv('TOKEN'))
+    bot = Bot(token=TELEGRAM_BOT_TOKEN)
     dp = Dispatcher()
 
     # Подключение роутера
