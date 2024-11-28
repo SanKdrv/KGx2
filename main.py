@@ -3,6 +3,7 @@ from message_broker import message_broker_module
 import asyncio
 from dotenv import find_dotenv, load_dotenv
 from aiogram import Bot, Dispatcher
+import config
 import os
 from parse import parse_module
 from models.models import *
@@ -33,7 +34,7 @@ load_dotenv(find_dotenv())
 
 from chatbot.handlers.user_private import user_private_router
 
-bot = Bot(token=os.getenv('TOKEN'))
+bot = Bot(token=config.TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
 
 async def botStart():
