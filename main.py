@@ -1,13 +1,13 @@
 import threading
 from message_broker import message_broker_module
 import asyncio
-from dotenv import find_dotenv, load_dotenv
 from aiogram import Bot, Dispatcher
 import config
 import os
 from parse import parse_module
 from models.models import *
 from config import *
+from chatbot.handlers.user_private import user_private_router
 
 
 # Инициализация ORM моделей
@@ -26,11 +26,6 @@ thread1 = threading.Thread(target=parser.parse_bybit())
 # thread4 = threading.Thread(target=task_module_4)
 thread5 = threading.Thread(target=broker.run_broker())
 
-# / Запуск бота
-# Подключение .env
-load_dotenv(find_dotenv())
-
-from chatbot.handlers.user_private import user_private_router
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
