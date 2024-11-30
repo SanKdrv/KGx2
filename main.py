@@ -9,7 +9,7 @@ from models.models import *
 from config import *
 
 
-# # Инициализация ORM моделей
+# Инициализация ORM моделей
 users = Users('Users')
 tokens = Tokens('Tokens')
 users_tokens = UsersTokens('UsersTokens')
