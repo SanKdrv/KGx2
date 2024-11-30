@@ -1,6 +1,7 @@
 from .base_model import BaseModel
 import sqlalchemy as db
 import typing
+from sqlalchemy import exists, select
 
 
 # Создание моделей:
@@ -8,15 +9,28 @@ import typing
 # tokens = Tokens('Tokens')
 # users_tokens = UsersTokens('UsersTokens')
 
-
 class Users(BaseModel):
     """Класс для работы с таблицей пользователей"""
     def __init__(self, table_name: str):
         super().__init__(table_name)
-        
+
+    def check_user_existence(self, user_UID: str) -> bool:
+        """
+        Проверка наличия записей о пользователе в БД
+        """
+        check_user_already_created_query = db.select(self.table).where(self.table.c.UID == user_UID)
+        check_user_already_created_query_result = self.connection.execute(check_user_already_created_query)
+
+        # Пользователь не принимал политику пользования
+        if len(check_user_already_created_query_result.fetchall()) == 0:
+            return True
+        # Пользователь уже принял политику пользования
+        else:
+            return False
+
     def check_user_limit(self, user_UID: str) -> int:
         """ Проверка лимита пользователя по его UID
-            Метод возвращает -1, если не найен 
+            Метод возвращает -1, если не найден
             пользователь с заданным UID """
         user_limit_query = db.select(self.table.c.Limit).where(self.table.c.UID == user_UID)
         query_result = self.connection.execute(user_limit_query) 
@@ -88,7 +102,13 @@ class Tokens(BaseModel):
             tikers.append(tiker[0])
         
         return tikers
-    
+
+    def get_token_ID(self, tiker: str) -> str:
+        """ Получение id криптовалюты по тикеру"""
+        token_ID_by_tiker_query = db.select(self.table).where(self.table.c.Tiker == tiker)
+        query_result = self.connection.execute(token_ID_by_tiker_query)
+        return str(query_result.fetchone()[0])
+
     def get_tiker_by_token_ID(self, token_ID: int) -> str:
         """ Получение тикера по id криптовалюты
             Метод принимает id криптовалюты и возвращает 
@@ -99,7 +119,7 @@ class Tokens(BaseModel):
 
         if len(query_result.fetchone()) == 1:
             return str(query_result.fetchone()[1])
-        else: 
+        else:
             return 'No token found with given id'
 
 
