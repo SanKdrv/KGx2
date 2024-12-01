@@ -84,6 +84,9 @@ class Users(BaseModel):
         self.connection.execute(reset_limits_query)
         self.connection.commit()
 
+    #TODO: Рома доделай метод
+    def select_user(self) -> [str]:
+        """ Возвращает айдишники всех активных пользователей бота """
 
 class Tokens(BaseModel):
     """Класс для работы с таблицей токенов"""
