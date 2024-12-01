@@ -187,4 +187,5 @@ class UsersTokens(BaseModel):
             self.connection.commit()
             return 'Token successfully removed from the tracking list'  
         
-        return 'Error during removing token from the tracking list. Maybe that user does not have this token in his tracking list'
+        return ('Error during removing token from the tracking list. Maybe that user does not have this token in his '
+                'tracking list')
