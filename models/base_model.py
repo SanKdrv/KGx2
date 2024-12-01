@@ -2,6 +2,7 @@ import sqlalchemy as db
 import typing
 from config import *
 
+
 class BaseModel():
     """Базовый класс для работы с таблицами MySQL."""
     def __init__(self, table_name: str):
