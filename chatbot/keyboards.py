@@ -1,16 +1,38 @@
 from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
-from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from main import tokens as db_tokens, users
+from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, \
+    InlineKeyboardButton, CallbackQuery
+from config import *
+from main import tokens as db_tokens
 from main import users_tokens
 
 
 # Основная клавиатура снизу
-main_kb = ReplyKeyboardMarkup(
-    keyboard=[
-        [KeyboardButton(text='Меню'), KeyboardButton(text='Подписки'), KeyboardButton(text='О боте')]
-    ],
-    resize_keyboard=True,
+# def main_kb_init(user_id):
+#     buttons = [
+#             [KeyboardButton(text='Криптовалюты 🏦'), KeyboardButton(text='Мои подписки ❤'), KeyboardButton(text='О боте 👾')]
+#         ]
+#     if user_id in admins_id:
+#         buttons.append(KeyboardButton[
+#             text =
+#                        ])
+
+
+main_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text='Криптовалюты 🏦', callback_data='menu')],
+        [InlineKeyboardButton(text='Мои подписки ❤', callback_data='checktokens')],
+        [InlineKeyboardButton(text='О боте 👾', callback_data='help')]
+    ]
+)
+
+admin_main_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text='Криптовалюты 🏦', callback_data='menu')],
+        [InlineKeyboardButton(text='Мои подписки ❤', callback_data='checktokens')],
+        [InlineKeyboardButton(text='О боте 👾', callback_data='help')],
+        [InlineKeyboardButton(text='Админ панель 🛑', callback_data='admin_message')]
+    ]
 )
 
 # Inline-клавиатура "регистрации"
@@ -18,6 +40,12 @@ start = InlineKeyboardMarkup(
     inline_keyboard=[
         [InlineKeyboardButton(text='Политика конфиденциальности', url='https://yandex.ru/search/?clid=2456108&text=Политика+конфиденциальности&l10n=ru&lr=18')],
         [InlineKeyboardButton(text='Согласиться', callback_data='agreement')]
+    ]
+)
+
+admin_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text='Рассылка📧', callback_data='admin_message')]
     ]
 )
 
@@ -40,15 +68,17 @@ async def checktokens_message(userID):
     for token in db_tokens_list:
         tokenID = int(db_tokens.get_token_ID(token))
         if tokenID in user_tokens:
+
             tokens_list.append(token)
 
     # Создаем строку с токенами, соединяя их через запятую
     formatted_tokens = ', '.join(tokens_list)
-    if len(formatted_tokens) > len(text):
+
+    if len(user_tokens) > 0:
         # Добавляем отформатированные токены к началу сообщения
         full_text = f"{text}{formatted_tokens}"
     else:
-        full_text = f"{text}Ничего"
+        full_text = "Ваш список подписок пустой."
 
     return full_text
 
@@ -83,3 +113,11 @@ async def inline_tokens_kb(userID, page: int=0):
     menu.row(*buttons_row)  # Добавление кнопок навигации
     menu.row(InlineKeyboardButton(text="Отписаться от всех", callback_data=f'tokens_unsubscribe:{page}'))
     return menu.as_markup()  # Возвращение клавиатуры в виде разметки 💩
+
+def cancel_btn():
+    return ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text="❌ Отмена")]],
+        resize_keyboard=True,
+        one_time_keyboard=False,
+        input_field_placeholder="Или нажмите на 'ОТМЕНА' для отмены"
+    )

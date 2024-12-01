@@ -21,3 +21,5 @@ REDIS_CONFIG = {
     'DATABASE': 0,
     'PASSWORD': 'student'
 }
+
+admins_id = [671882033, 573778121]

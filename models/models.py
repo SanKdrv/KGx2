@@ -1,7 +1,6 @@
 from .base_model import BaseModel
 import sqlalchemy as db
 import typing
-from sqlalchemy import exists, select
 
 
 # Создание моделей:
