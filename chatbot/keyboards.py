@@ -4,36 +4,31 @@ from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup, KeyboardButt
     InlineKeyboardButton, CallbackQuery
 from config import *
 from main import tokens as db_tokens
-from main import users_tokens
+from main import users_tokens, users
 
 
 # Основная клавиатура снизу
-# def main_kb_init(user_id):
-#     buttons = [
-#             [KeyboardButton(text='Криптовалюты 🏦'), KeyboardButton(text='Мои подписки ❤'), KeyboardButton(text='О боте 👾')]
-#         ]
-#     if user_id in admins_id:
-#         buttons.append(KeyboardButton[
-#             text =
-#                        ])
+# async def reply_main_kb_init(user_id):
+#     reply_menu = ReplyKeyboardMarkup(
+#         keyboard = [[KeyboardButton(text='Меню')]],
+#         resize_keyboard=True,
+#         one_time_keyboard=False,
+#         input_field_placeholder='Выберите любой пункт меню...'
+#     )
+#
+#     return reply_menu
 
 
-main_kb = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [InlineKeyboardButton(text='Криптовалюты 🏦', callback_data='menu')],
-        [InlineKeyboardButton(text='Мои подписки ❤', callback_data='checktokens')],
-        [InlineKeyboardButton(text='О боте 👾', callback_data='help')]
-    ]
-)
+async def inline_main_kb(user_id):
+    menu = InlineKeyboardBuilder()
+    menu.row(InlineKeyboardButton(text='Криптовалюты 🏦', callback_data='crypto_menu'))
+    menu.row(InlineKeyboardButton(text='Мои подписки ❤', callback_data='checktokens'))
+    menu.row(InlineKeyboardButton(text='О боте 👾', callback_data='help'))
+    if user_id in admins_id:
+        menu.row(InlineKeyboardButton(text='Админ панель 🛑', callback_data='admin_message'))
 
-admin_main_kb = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [InlineKeyboardButton(text='Криптовалюты 🏦', callback_data='menu')],
-        [InlineKeyboardButton(text='Мои подписки ❤', callback_data='checktokens')],
-        [InlineKeyboardButton(text='О боте 👾', callback_data='help')],
-        [InlineKeyboardButton(text='Админ панель 🛑', callback_data='admin_message')]
-    ]
-)
+    return menu.as_markup()
+
 
 # Inline-клавиатура "регистрации"
 start = InlineKeyboardMarkup(
@@ -43,19 +38,34 @@ start = InlineKeyboardMarkup(
     ]
 )
 
-admin_kb = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [InlineKeyboardButton(text='Рассылка📧', callback_data='admin_message')]
-    ]
-)
+# admin_kb = InlineKeyboardMarkup(
+#     inline_keyboard=[
+#         [InlineKeyboardButton(text='Рассылка 📧', callback_data='admin_message')]
+#     ]
+# )
 
 # Inline-клавиатура команды "О боте"
-help = InlineKeyboardMarkup(
-    inline_keyboard=[
-        [InlineKeyboardButton(text='🧾Wiki-страница', url='https://se.cs.petrsu.ru/wiki/KGx2')],
-        [InlineKeyboardButton(text='⬛GitHub', url='https://github.com/SanKdrv/KGx2')],
+async def help_kb_init(userID):
+    buttons = [
+        [InlineKeyboardButton(text='Wiki-страница 🧾', url='https://se.cs.petrsu.ru/wiki/KGx2')],
+        [InlineKeyboardButton(text='GitHub ⬛', url='https://github.com/SanKdrv/KGx2')]
     ]
-)
+
+    if users.check_user_existence(userID) == False:
+        buttons.append([InlineKeyboardButton(text='Меню ⬅', callback_data='back_to_menu')])
+
+    help = InlineKeyboardMarkup(
+        inline_keyboard=buttons
+    )
+    # help = InlineKeyboardMarkup(
+    #     inline_keyboard=[
+    #         [InlineKeyboardButton(text='Wiki-страница 🧾', url='https://se.cs.petrsu.ru/wiki/KGx2')],
+    #         [InlineKeyboardButton(text='GitHub ⬛', url='https://github.com/SanKdrv/KGx2')],
+    #         [InlineKeyboardButton(text='Меню ⬅', callback_data='back_to_menu')]
+    #     ]
+    # )
+    return help
+
 
 async def checktokens_message(userID):
     text = 'Вы подписаны на: '
@@ -119,5 +129,5 @@ def cancel_btn():
         keyboard=[[KeyboardButton(text="❌ Отмена")]],
         resize_keyboard=True,
         one_time_keyboard=False,
-        input_field_placeholder="Или нажмите на 'ОТМЕНА' для отмены"
+        input_field_placeholder="Или нажмите на 'ОТМЕНА' для отмены",
     )
