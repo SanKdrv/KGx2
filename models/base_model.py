@@ -20,7 +20,13 @@ class BaseModel():
         """ Выбор всех записей из таблицы и вывод их на экран
             Метод возвращает массив словарей (записи таблицы) """
         select_all_query = db.select(self.table)
-        query_result = self.connection.execute(select_all_query)
+
+        try:
+            query_result = self.connection.execute(select_all_query)
+        except:
+            self.connection = self.engine.connect()
+            query_result = self.connection.execute(select_all_query)
+            
         result = []
         column_names = list(query_result.keys())
 
