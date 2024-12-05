@@ -103,7 +103,6 @@ class AlghorizmizationModule:
 
         return float(df['rsi'].iloc[-1])  # Приведение к float
 
-
     def process_data(self):
         """
         Основная логика обработки данных.
@@ -137,9 +136,9 @@ class AlghorizmizationModule:
                 price_1 = float(row[1]['close_price'])
                 points_14.append([timestamp_1, price_1])
 
-            # if (round(rsi, 2) < 25 or round(rsi, 2) > 80):
-            #     results.append([ticker, timestamp, price, round(rsi, 2), points_14])
-            results.append([ticker, timestamp, price, round(rsi, 2), points_14])
+            if (round(rsi, 2) < 25 or round(rsi, 2) > 75):
+                results.append([ticker, timestamp, price, round(rsi, 2), points_14])
+            # results.append([ticker, timestamp, price, round(rsi, 2), points_14])
 
         # Вывод результатов
         for result in results:
