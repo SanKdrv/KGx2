@@ -6,7 +6,7 @@ import logging
 import chatbot.keyboards as kb
 from chatbot.keyboards import inline_tokens_kb, checktokens_message, cancel_btn
 from chatbot.keyboards import Pagination
-from main import users, users_tokens, bot
+from main import users, users_tokens, bot, tokens
 from config import *
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
@@ -45,17 +45,24 @@ async def broadcast_message(users_data: list, text: str = None, photo_id: int = 
 
 # Пост img, tiker
 async def rsi_signal(tiker):
-    # tiker = 'BTCUSDT'
+    token_UID = tokens.get_token_ID(tiker[:-4])
+
     s = f'https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT'
     # Правила отбора получателя
-    users_id_list = users.select_all()
+    users_id_list = users_tokens.get_users_by_token(token_UID)
     users_id = [user['UID'] for user in users_id_list]
 
-    for user in users_id_list
-        bot.send_message(
-            chat_id=user['UID'],
-            text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
-        )
+    print('priiiiveeeet')
+
+    tasks = [bot.send_message(chat_id=user['UID'], text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT') for user in users_id_list]
+    await asyncio.gather(*tasks)
+
+    # for user in users_id_list:
+    #     print(user['UID'])
+    #     bot.send_message(
+    #         chat_id=user['UID'],
+    #         text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
+    #     )
 
     print(users_id)
     print(tiker)

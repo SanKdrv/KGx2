@@ -14,7 +14,6 @@ from config import *
 from alghorizmization import RSI_main
 from queue import Queue
 
-import aioschedule
 
 # Инициализация ORM моделей
 users = Users('Users')
