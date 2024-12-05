@@ -121,6 +121,7 @@ def process_data():
     for ticker in data['ticker'].unique():
         ticker_data = data[data['ticker'] == ticker].sort_values('timestamp')
         prices = ticker_data['close_price'].tolist()
+        # print(prices)
 
         # Если недостаточно данных для расчета RSI, пропускаем
         if len(prices) < 14:
@@ -128,8 +129,9 @@ def process_data():
 
         rsi = calculate_rsi(prices)
         latest_entry = ticker_data.iloc[-1]
-        timestamp = datetime.fromtimestamp(
-            latest_entry['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
+        # timestamp = datetime.fromtimestamp(
+        #     latest_entry['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = datetime.fromtimestamp(latest_entry['timestamp'] / 1000).strftime('%Y-%m-%d %H:%M:%S')
         price = float(latest_entry['close_price'])
         results.append([ticker, timestamp, price, round(rsi, 2)])
 

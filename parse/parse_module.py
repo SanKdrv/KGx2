@@ -83,7 +83,8 @@ class Parse():
                     last_timestamp = self.last_timestamps[symbol]
                     time_difference = abs(timestamp - last_timestamp)
 
-                    if time_difference >= 900000:
+                    # if time_difference >= 900000:
+                    if time_difference >= 60000:
                         self.last_timestamps[symbol] = timestamp
                         self.redis_cli.set(name=f"KGx2___{symbol}.{timestamp}", value=float(close_price), ex=23400)
                         print(f'KGx2___{symbol}.{timestamp}: {float(close_price)}')
@@ -98,7 +99,7 @@ class Parse():
             while attempts < max_attempts_count:
                 try:
                     self.websocket.kline_stream(
-                        interval=15,  
+                        interval=1,
                         symbol=token,
                         callback=handle_message
                     )
