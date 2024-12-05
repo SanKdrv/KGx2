@@ -7,7 +7,7 @@ import os
 from parse import parse_module
 from models.models import *
 from config import *
-
+from alghorizmization import RSI_main
 
 # Инициализация ORM моделей
 users = Users('Users')
@@ -17,16 +17,18 @@ users_tokens = UsersTokens('UsersTokens')
 # # Инициализация модулей
 # broker = message_broker_module.MessageBroker()
 parser = parse_module.Parse(tokens_table=tokens)
-#
+alg = RSI_main.AlghorizmizationModule()
+
 # # Создание потоков
 thread1 = threading.Thread(target=parser.parse_bybit)
-# # thread2 = threading.Thread(target=task_module_2)
-# # thread3 = threading.Thread(target=task_module_3)
+thread2 = threading.Thread(target=alg.run)
+# thread3 = threading.Thread(target=task_module_3)
 # # thread4 = threading.Thread(target=task_module_4)
 # thread5 = threading.Thread(target=broker.run_broker)
 #
 # thread5.start()
 thread1.start()
+thread2.start()
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
