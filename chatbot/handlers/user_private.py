@@ -45,12 +45,13 @@ async def broadcast_message(users_data: list, text: str = None, photo_id: int = 
 
 # Пост img, tiker
 async def rsi_signal(tiker):
-    tiker = 'BTCUSDT'
+    # tiker = 'BTCUSDT'
     s = f'https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT'
     # Правила отбора получателя
     users_id_list = users.select_all()
     users_id = [user['UID'] for user in users_id_list]
-
+    print(users_id)
+    print(tiker)
     good_send, bad_send = await broadcast_message(
         users_data=users_id,
         text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
@@ -61,11 +62,6 @@ async def rsi_signal(tiker):
         # caption=message.caption,
         # content_type=content_type
     )
-
-    await state.clear()
-    await message.answer(f'Рассылка завершена. Сообщение получило <b>{good_send}</b>, '
-                         f'НЕ получило <b>{bad_send}</b> пользователей.', reply_markup=await kb.inline_main_kb(userID), parse_mode=ParseMode.HTML)
-
 
 # TODO: Добавить лимиты запросов
 

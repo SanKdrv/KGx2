@@ -18,18 +18,6 @@ class AlghorizmizationModule:
         super().__init__()
         self.redis_client = self.create_redis_connection()
         self.interval_seconds = 40
-        self.running = False
-
-    def run(self):
-        self.running = True
-        while self.running:
-            current_time = datetime.now().strftime("%H:%M:%S")
-            print(f"\n{current_time}: Starting read cycle...")
-            time.sleep(self.interval_seconds)
-            return self.process_data()
-
-    def stop(self):
-        self.running = False
 
     def create_redis_connection(self) -> redis.Redis:
         """ Создание клиента Redis
@@ -39,19 +27,6 @@ class AlghorizmizationModule:
                             port=REDIS_CONFIG['PORT'],
                             db=REDIS_CONFIG['DATABASE'],
                             password=REDIS_CONFIG['PASSWORD'])
-
-    # def create_redis_connection(self):
-    #     """
-    #     Создание клиента Redis.
-    #     """
-    #     try:
-    #         client = self.redis_client
-    #         client.ping()
-    #         print("Успешно подключено к Redis")
-    #         return client
-    #     except redis.ConnectionError as e:
-    #         print(f"Ошибка подключения к Redis: {e}")
-    #         exit(1)
 
 
     def fetch_last_14_data_from_redis(self):
@@ -162,6 +137,8 @@ class AlghorizmizationModule:
                 price_1 = float(row[1]['close_price'])
                 points_14.append([timestamp_1, price_1])
 
+            # if (round(rsi, 2) < 25 or round(rsi, 2) > 80):
+            #     results.append([ticker, timestamp, price, round(rsi, 2), points_14])
             results.append([ticker, timestamp, price, round(rsi, 2), points_14])
 
         # Вывод результатов
@@ -169,10 +146,3 @@ class AlghorizmizationModule:
             print(result)
 
         return results
-
-
-# Запуск программы
-# if __name__ == "__main__":
-#     alg = AlghorizmizationModule()
-#     alg.run()
-#     # process_data()

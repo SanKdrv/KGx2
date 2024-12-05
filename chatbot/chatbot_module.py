@@ -3,6 +3,8 @@ import time
 import asyncio
 
 from aiogram import Bot, Dispatcher
+
+import chatbot.handlers.user_private
 # from dotenv import find_dotenv, load_dotenv
 from chatbot.handlers.user_private import user_private_router
 # from main import q
@@ -28,29 +30,12 @@ def start_bot():
 
 
 async def pull_gueue():
-    while True:
-        alg = RSI_main.AlghorizmizationModule()
-        q = alg.process_data()
-        print(q)
-        # try:
-        #     # Проверяем наличие элементов в очереди
-        #     if len(q) > 0:
-        #
-        #         # Получаем первое сообщение из очереди
-        #         message = q # Ограничиваем время ожидания
-        #
-        #         # Обрабатываем полученное сообщение
-        #         print(f"Получено сообщение: {message}")
-        #
-        #         # Очищаем очередь после обработки
-        #         # q.task_done()
-        #
-        # except q.Empty:
-        #     print("Очередь пуста или время ожидания истекло.")
-        #
-        # except Exception as e:
-        #     print(f"Ошибка при проверке очереди: {str(e)}")
-
-        # Ожидаем 15 минут перед следующей проверкой
-        await asyncio.sleep(15)
-        time.sleep(15)  # 900 секунд = 15 минут
+    # await asyncio.sleep(15)
+    # print('jopa')
+    alg = RSI_main.AlghorizmizationModule()
+    q = alg.process_data()
+    if not q:
+        print('Печалька')
+    print(q)
+    for data in q:
+        await chatbot.handlers.user_private.rsi_signal(data[0])
