@@ -25,8 +25,8 @@ class AlghorizmizationModule:
         while self.running:
             current_time = datetime.now().strftime("%H:%M:%S")
             print(f"\n{current_time}: Starting read cycle...")
-            self.process_data()
             time.sleep(self.interval_seconds)
+            return self.process_data()
 
     def stop(self):
         self.running = False
@@ -172,7 +172,7 @@ class AlghorizmizationModule:
 
 
 # Запуск программы
-if __name__ == "__main__":
-    alg = AlghorizmizationModule()
-    alg.run()
-    # process_data()
+# if __name__ == "__main__":
+#     alg = AlghorizmizationModule()
+#     alg.run()
+#     # process_data()
