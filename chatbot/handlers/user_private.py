@@ -50,18 +50,25 @@ async def rsi_signal(tiker):
     # Правила отбора получателя
     users_id_list = users.select_all()
     users_id = [user['UID'] for user in users_id_list]
+
+    for user in users_id_list
+        bot.send_message(
+            chat_id=user['UID'],
+            text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
+        )
+
     print(users_id)
     print(tiker)
-    good_send, bad_send = await broadcast_message(
-        users_data=users_id,
-        text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
-        # photo_id=message.photo[-1].file_id if content_type == ContentType.PHOTO else None,
-        # document_id=message.document.file_id if content_type == ContentType.DOCUMENT else None,
-        # video_id=message.video.file_id if content_type == ContentType.VIDEO else None,
-        # audio_id=message.audio.file_id if content_type == ContentType.AUDIO else None,
-        # caption=message.caption,
-        # content_type=content_type
-    )
+    # good_send, bad_send = await broadcast_message(
+    #     users_data=users_id,
+    #     text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
+    #     # photo_id=message.photo[-1].file_id if content_type == ContentType.PHOTO else None,
+    #     # document_id=message.document.file_id if content_type == ContentType.DOCUMENT else None,
+    #     # video_id=message.video.file_id if content_type == ContentType.VIDEO else None,
+    #     # audio_id=message.audio.file_id if content_type == ContentType.AUDIO else None,
+    #     # caption=message.caption,
+    #     # content_type=content_type
+    # )
 
 # TODO: Добавить лимиты запросов
 
