@@ -23,7 +23,6 @@ def create_redis_connection():
             password=REDIS_CONFIG['PASSWORD'],
             decode_responses=True
         )
-        # Проверка подключения
         client.ping()
         print("Успешно подключено к Redis")
         return client
@@ -32,9 +31,9 @@ def create_redis_connection():
         exit(1)
 
 
-def fetch_data_from_redis(client):
+def fetch_last_14_data_from_redis(client):
     """
-    Получение данных о монетах из Redis.
+    Получение последних 14 данных для каждого тикера из Redis.
 
     :param client: объект подключения Redis
     :return: DataFrame с колонками: ['ticker', 'timestamp', 'close_price']
@@ -42,26 +41,35 @@ def fetch_data_from_redis(client):
     data = []
     keys = client.keys("KGx2___*")  # Ищем все ключи с данным префиксом
 
+    # Группируем ключи по тикеру
+    ticker_data = {}
     for key in keys:
-        # Парсинг ключа
         try:
-            prefix, ticker_timestamp = key.split("___")
+            _, ticker_timestamp = key.split("___")
             ticker, timestamp = ticker_timestamp.split(".")
             timestamp = int(timestamp)  # Преобразуем метку времени
 
-            # Получаем цену из значения
+            # Получаем значение (цена закрытия)
             value = client.get(key)
             close_price = float(value.strip('}'))
 
-            # Добавляем данные в список
+            # Добавляем данные в список по тикеру
+            if ticker not in ticker_data:
+                ticker_data[ticker] = []
+            ticker_data[ticker].append((timestamp, close_price))
+        except ValueError as e:
+            print(f"Ошибка обработки ключа {key}: {e}")
+            continue
+
+    # Оставляем только последние 14 записей для каждого тикера
+    for ticker, values in ticker_data.items():
+        sorted_values = sorted(values, key=lambda x: x[0], reverse=True)[:14]
+        for timestamp, close_price in sorted_values:
             data.append({
                 'ticker': ticker,
                 'timestamp': timestamp,
                 'close_price': close_price
             })
-        except ValueError as e:
-            print(f"Ошибка обработки ключа {key}: {e}")
-            continue
 
     return pd.DataFrame(data)
 
@@ -91,7 +99,7 @@ def process_data():
     Основная логика обработки данных.
     """
     client = create_redis_connection()
-    data = fetch_data_from_redis(client)
+    data = fetch_last_14_data_from_redis(client)
 
     if data.empty:
         print("Нет данных в Redis.")
