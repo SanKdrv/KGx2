@@ -44,38 +44,44 @@ async def broadcast_message(users_data: list, text: str = None, photo_id: int = 
 
 
 # Пост img, tiker
-async def rsi_signal(tiker):
-    token_UID = tokens.get_token_ID(tiker[:-4])
+async def rsi_signal(data):
+    tasks = []
+    for item in data:
+        tiker = item[0][:-4]
+        print(tiker)
+        token_UID = tokens.get_token_ID(item[0])
+        # token_UID = '1'
+        print('jopa3')
+        s = f'https://www.bybit.com/ru-RU/trade/spot/{tiker}/USDT'
+        # Правила отбора получателя
+        users_id_list = users_tokens.get_users_by_token(int(token_UID))
 
-    s = f'https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT'
-    # Правила отбора получателя
-    users_id_list = users_tokens.get_users_by_token(token_UID)
-    users_id = [user['UID'] for user in users_id_list]
-
-    print('priiiiveeeet')
-
-    tasks = [bot.send_message(chat_id=user['UID'], text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT') for user in users_id_list]
+        print('priiiiveeeet')
+        # for user in users_id:
+        #     bot.send_message(chat_id=user,
+        #                      text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT')
+        tasks += [bot.send_message(chat_id=user, text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker}/USDT') for user in users_id_list]
     await asyncio.gather(*tasks)
 
-    # for user in users_id_list:
-    #     print(user['UID'])
-    #     bot.send_message(
-    #         chat_id=user['UID'],
-    #         text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
-    #     )
+        # for user in users_id_list:
+        #     print(user['UID'])
+        #     bot.send_message(
+        #         chat_id=user['UID'],
+        #         text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
+        #     )
 
-    print(users_id)
-    print(tiker)
-    # good_send, bad_send = await broadcast_message(
-    #     users_data=users_id,
-    #     text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
-    #     # photo_id=message.photo[-1].file_id if content_type == ContentType.PHOTO else None,
-    #     # document_id=message.document.file_id if content_type == ContentType.DOCUMENT else None,
-    #     # video_id=message.video.file_id if content_type == ContentType.VIDEO else None,
-    #     # audio_id=message.audio.file_id if content_type == ContentType.AUDIO else None,
-    #     # caption=message.caption,
-    #     # content_type=content_type
-    # )
+        # print(users_id_list)
+        # print(tiker)
+        # good_send, bad_send = await broadcast_message(
+        #     users_data=users_id,
+        #     text=f'Заносик, покупай здесь: https://www.bybit.com/ru-RU/trade/spot/{tiker[:-4]}/USDT',
+        #     # photo_id=message.photo[-1].file_id if content_type == ContentType.PHOTO else None,
+        #     # document_id=message.document.file_id if content_type == ContentType.DOCUMENT else None,
+        #     # video_id=message.video.file_id if content_type == ContentType.VIDEO else None,
+        #     # audio_id=message.audio.file_id if content_type == ContentType.AUDIO else None,
+        #     # caption=message.caption,
+        #     # content_type=content_type
+        # )
 
 # TODO: Добавить лимиты запросов
 

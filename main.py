@@ -65,6 +65,7 @@ async def scheduler(delay):
         #     print('okayu')
         # for user in users_id:
         #     await bot.send_message(user, 'privetqtqeteqwqeteqwtgewq')
+        print('jopa')
         await chatbot.chatbot_module.pull_gueue()
         await asyncio.sleep(delay=delay)
 
