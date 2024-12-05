@@ -16,16 +16,16 @@ users_tokens = UsersTokens('UsersTokens')
 
 # # Инициализация модулей
 # broker = message_broker_module.MessageBroker()
-# parser = parse_module.Parse(tokens_table=tokens)
+parser = parse_module.Parse(tokens_table=tokens)
 #
 # # Создание потоков
-# thread1 = threading.Thread(target=parser.parse_bybit)
+thread1 = threading.Thread(target=parser.parse_bybit)
 # # thread2 = threading.Thread(target=task_module_2)
 # # thread3 = threading.Thread(target=task_module_3)
 # # thread4 = threading.Thread(target=task_module_4)
 # thread5 = threading.Thread(target=broker.run_broker)
 #
-# thread1.start()
+thread1.start()
 # thread5.start()
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)

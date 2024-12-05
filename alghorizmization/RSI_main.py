@@ -1,14 +1,15 @@
 import redis
 import pandas as pd
 from datetime import datetime
+from config import *
 
-# Конфигурация для подключения к Redis
-REDIS_CONFIG = {
-    'HOST': '192.168.112.103',
-    'PORT': 6379,
-    'DATABASE': 0,
-    'PASSWORD': 'student'
-}
+# # Конфигурация для подключения к Redis
+# REDIS_CONFIG = {
+#     'HOST': '192.168.112.103',
+#     'PORT': 6379,
+#     'DATABASE': 0,
+#     'PASSWORD': 'student'
+# }
 
 
 def create_redis_connection():
@@ -21,7 +22,7 @@ def create_redis_connection():
             port=REDIS_CONFIG['PORT'],
             db=REDIS_CONFIG['DATABASE'],
             password=REDIS_CONFIG['PASSWORD'],
-            decode_responses=True
+            # decode_responses=True
         )
         client.ping()
         print("Успешно подключено к Redis")
@@ -39,8 +40,18 @@ def fetch_last_14_data_from_redis(client):
     :return: DataFrame с колонками: ['ticker', 'timestamp', 'close_price']
     """
     data = []
-    keys = client.keys("KGx2___*")  # Ищем все ключи с данным префиксом
+    keys = []
+    cursor = 0
+    while True:
+        cursor, partial_keys = client.scan(cursor=cursor, match="KGx2___*", count=1000)
+        keys.extend(partial_keys)
+        if cursor == 0:
+            break
 
+    keys = [key.decode('utf-8') for key in keys]
+    # print(keys)
+
+    # print(keys)
     # Группируем ключи по тикеру
     ticker_data = {}
     for key in keys:
@@ -50,7 +61,8 @@ def fetch_last_14_data_from_redis(client):
             timestamp = int(timestamp)  # Преобразуем метку времени
 
             # Получаем значение (цена закрытия)
-            value = client.get(key)
+            value = client.get(key).decode('utf-8')
+            # print(value)
             close_price = float(value.strip('}'))
 
             # Добавляем данные в список по тикеру
