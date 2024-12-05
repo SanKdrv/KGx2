@@ -117,11 +117,11 @@ def process_data():
         print("Нет данных в Redis.")
         return
 
+    # print(data)
     results = []
     for ticker in data['ticker'].unique():
         ticker_data = data[data['ticker'] == ticker].sort_values('timestamp')
         prices = ticker_data['close_price'].tolist()
-        # print(prices)
 
         # Если недостаточно данных для расчета RSI, пропускаем
         if len(prices) < 14:
@@ -129,11 +129,17 @@ def process_data():
 
         rsi = calculate_rsi(prices)
         latest_entry = ticker_data.iloc[-1]
-        # timestamp = datetime.fromtimestamp(
-        #     latest_entry['timestamp']).strftime('%Y-%m-%d %H:%M:%S')
         timestamp = datetime.fromtimestamp(latest_entry['timestamp'] / 1000).strftime('%Y-%m-%d %H:%M:%S')
         price = float(latest_entry['close_price'])
-        results.append([ticker, timestamp, price, round(rsi, 2)])
+
+        # 14 Цен закрытий графика
+        points_14 = []
+        for row in ticker_data.iterrows():
+            timestamp_1 = datetime.fromtimestamp(row[1]['timestamp'] / 1000).strftime('%Y-%m-%d %H:%M:%S')
+            price_1 = float(row[1]['close_price'])
+            points_14.append([timestamp_1, price_1])
+
+        results.append([ticker, timestamp, price, round(rsi, 2), points_14])
 
     # Вывод результатов
     for result in results:

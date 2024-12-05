@@ -25,8 +25,8 @@ thread1 = threading.Thread(target=parser.parse_bybit)
 # # thread4 = threading.Thread(target=task_module_4)
 # thread5 = threading.Thread(target=broker.run_broker)
 #
-thread1.start()
 # thread5.start()
+thread1.start()
 
 bot = Bot(token=TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
@@ -42,3 +42,4 @@ async def botStart():
 # Запуск бота
 if __name__ == '__main__':
     asyncio.run(botStart())
+
