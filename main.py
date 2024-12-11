@@ -1,23 +1,23 @@
 import threading
 import time
-
+from aiogram.enums import ParseMode
+from aiogram.types import FSInputFile
+from matplotlib import pyplot as plt
 from matplotlib.dates import date2num, DateFormatter
 from pandas.core._numba import executor
-
+import pandas as pd
+from datetime import datetime
 import chatbot.chatbot_module
 from message_broker import message_broker_module
 import asyncio
 from aiogram import Bot, Dispatcher
 import config
 import os
-import matplotlib.pyplot as plt
-from datetime import datetime
 from parse import parse_module
 from models.models import *
 from config import *
 from alghorizmization import RSI_main
 from queue import Queue
-import pandas as pd
 
 
 # Инициализация ORM моделей
@@ -106,15 +106,22 @@ async def scheduler(delay):
             for item in data:
                 tiker = item[0][:-4]
                 print(tiker)
-                saved_png_path = draw_chart(tiker)
-                # TODO добавь картинку в письмо по пути saved_png_path
-
                 token_UID = tokens.get_token_ID(item[0])
+                saved_png_path = draw_chart(tiker)
                 s = f'https://www.bybit.com/ru-RU/trade/spot/{tiker}/USDT'
                 users_id_list = users_tokens.get_users_by_token(int(token_UID))
-                tasks += [bot.send_message(
+
+                caption_addon = str()
+                if float(item[3]) >= 75:
+                    caption_addon = 'Советуем продать.'
+                elif float(item[3]) <= 25:
+                    caption_addon = 'Рекомендуем докупить.'
+
+                tasks += [bot.send_photo(
                     chat_id=user,
-                    text=f'Заносик, покупай здесь: {s}'
+                    photo=FSInputFile(saved_png_path),
+                    caption=f'Алгоритм для <b>{tiker}</b> отработан. \n {caption_addon} \nСсылка на покупку: {s}',
+                    parse_mode=ParseMode.HTML
                 ) for user in users_id_list]
             await asyncio.gather(*tasks)
         except Exception as e:

@@ -34,10 +34,8 @@ async def pull_gueue():
     # print('jopa')
     alg = RSI_main.AlghorizmizationModule()
     q = alg.process_data()
-    print('jopa2')
     if not q:
         print('Печалька')
-    else:
-        print('Не печалька')
     print(q)
-    await chatbot.handlers.user_private.rsi_signal(q)
+    for data in q:
+        await chatbot.handlers.user_private.rsi_signal(data[0])

@@ -200,7 +200,11 @@ async def token_subscription(callback: CallbackQuery):
     userID = callback.from_user.id
     tokenID = int(callback.data.split(':')[-2])
 
+    users.dec_user_limit(userID)
+
     user_tokens = users_tokens.get_tokens_by_user(userID)
+
+    # TODO: уменьшение количества запросов на подписку/отписку
 
     # print(tokenID, user_tokens)
 
