@@ -51,8 +51,6 @@ async def botStart():
     )
 
 
-
-
 # Запуск бота
 if __name__ == '__main__':
     asyncio.run(botStart())
