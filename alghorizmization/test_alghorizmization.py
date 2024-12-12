@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import redis
 import pandas as pd
 from datetime import datetime
-from your_module import AlghorizmizationModule  # замените на реальное имя модуля
+from alghorizmization_module import Algorithmization
 
 class TestAlghorizmizationModule(unittest.TestCase):
 
