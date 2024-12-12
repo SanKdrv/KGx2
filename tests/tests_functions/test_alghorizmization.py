@@ -10,7 +10,7 @@ class TestAlghorizmizationModule(unittest.TestCase):
     def setUp(self):
         self.module = AlghorizmizationModule()
         self.module.redis_client = MagicMock()  # Мокаем Redis клиент
-
+# Проверяет, что Redis-клиент инициализируется с правильными параметрами.
     def test_create_redis_connection(self):
         with patch('your_module.redis.Redis') as mock_redis:
             self.module.create_redis_connection()
@@ -20,7 +20,7 @@ class TestAlghorizmizationModule(unittest.TestCase):
                 db=0,
                 password=None
             )
-
+# Тестирует корректность сохранения и извлечения данных о монете.
     def test_save_and_get_last_coin_data_to_redis(self):
         ticker = 'BTCUSDT'
         data = {
@@ -39,7 +39,7 @@ class TestAlghorizmizationModule(unittest.TestCase):
         self.module.redis_client.get.return_value = str(data).encode('utf-8')
         result = self.module.get_last_coin_data_from_redis(ticker)
         self.assertEqual(result, data)
-
+# Проверяет, что функция правильно извлекает последние 14 записей из Redis.
     def test_fetch_last_14_data_from_redis(self):
         mock_keys = [b"KGx2___BTCUSDT.1672531200", b"KGx2___BTCUSDT.1672531260"]
         self.module.redis_client.scan = MagicMock(return_value=(0, mock_keys))
@@ -49,14 +49,14 @@ class TestAlghorizmizationModule(unittest.TestCase):
         self.assertIsInstance(result, pd.DataFrame)
         self.assertEqual(len(result), 2)
         self.assertEqual(result.iloc[0]['close_price'], 50000.0)
-
+# Убедиться, что расчет RSI работает корректно.
     def test_calculate_rsi(self):
         prices = [50, 51, 52, 53, 54, 55, 56, 55, 54, 53, 52, 51, 50, 49]
         expected_rsi = 42.86  # Примерное значение
 
         result = self.module.calculate_rsi(prices)
         self.assertAlmostEqual(result, expected_rsi, places=2)
-
+# Имитирует полный процесс обработки данных, включая вызовы вспомогательных функций.
     def test_process_data(self):
         mock_data = pd.DataFrame({
             'ticker': ['BTCUSDT'] * 14,
