@@ -9,7 +9,7 @@ class TestAlghorizmizationModule(unittest.TestCase):
 
     def setUp(self):
         self.module = AlghorizmizationModule()
-        self.module.redis_client = MagicMock()  # Мокаем Redis клиент
+        self.module.redis_client = MagicMock()
 # Проверяет, что Redis-клиент инициализируется с правильными параметрами.
     def test_create_redis_connection(self):
         with patch('your_module.redis.Redis') as mock_redis:
