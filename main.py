@@ -107,7 +107,7 @@ async def scheduler(delay):
                 tiker = item[0][:-4]
                 print(tiker)
                 token_UID = tokens.get_token_ID(item[0])
-                saved_png_path = draw_chart(tiker)
+                saved_png_path = draw_chart(tiker, item[4])
                 s = f'https://www.bybit.com/ru-RU/trade/spot/{tiker}/USDT'
                 users_id_list = users_tokens.get_users_by_token(int(token_UID))
 
