@@ -46,7 +46,6 @@ async def botStart():
     # Параллельный запуск бота и scheduler
     await asyncio.gather(
         dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types(), skip_updates=True),
-        # message_broker.message_broker_module.scheduler(delay=15)
         scheduler(delay=15)
     )
 

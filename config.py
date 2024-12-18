@@ -1,8 +1,8 @@
 MYSQL_CONFIG = {
-    'HOST': 'lapluquetri.beget.app',
-    'USER': 'KGx2_database',
-    'PASSWORD': 'KGx2_db_password_tppo',
-    'DATABASE': 'KGx2_database'
+    'HOST': 'имя хоста',
+    'USER': 'логин',
+    'PASSWORD': 'пароль',
+    'DATABASE': 'бд'
 }
 
 CONNECT_MYSQL_STRING = (
@@ -13,13 +13,13 @@ CONNECT_MYSQL_STRING = (
     f"{MYSQL_CONFIG['DATABASE']}"
 )
 
-TELEGRAM_BOT_TOKEN = '7562890523:AAHunLwe5hVVQrGBP3RzYv7qcP3lIxVmGt4'
+TELEGRAM_BOT_TOKEN = 'токен бота'
 
 REDIS_CONFIG = {
-    'HOST': '192.168.112.103',
+    'HOST': 'имя хоста',
     'PORT': 6379,
     'DATABASE': 0,
-    'PASSWORD': 'student'
+    'PASSWORD': 'пароль'
 }
 
-admins_id = [671882033, 573778121]
+admins_id = [int('Тг айди админа'), int('Тг айди админа')]
